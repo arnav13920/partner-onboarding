@@ -89,16 +89,16 @@ const ContactVerification = () => {
       {/* Contact Verification Form */}
       <div className="gap-6 mt-8">
         {/* Mobile Number */}
-        <div className="relative w-[900px] mb-6">
+        <div className="relative w-[450px] mb-6 group">
           <label
             htmlFor="mobileNumber"
-            className="absolute -top-3 left-5 bg-white px-1 text-sm text-[#575D6A]"
+            className="absolute -top-3 left-5 bg-white px-1 text-sm text-[#575D6A] pointer-events-none opacity-0 group-focus-within:opacity-100 transition-opacity"
           >
             Mobile Number *
           </label>
-          <div className="flex items-center gap-3 border-2 border-gray-400 rounded-2xl px-4 h-[65px]">
+          <div className="flex items-center gap-3 border-2 border-gray-400 rounded-2xl px-4 h-[45px]">
             <input
-              className="flex-1 outline-none bg-transparent"
+              className="flex-1 outline-none bg-transparent focus:placeholder-transparent text-base"
               id="mobileNumber"
               name="mobileNumber"
               type="tel"
@@ -134,16 +134,16 @@ const ContactVerification = () => {
         </div>
 
         {/* Email Address */}
-        <div className="relative w-[900px]">
+        <div className="relative w-[450px] group">
           <label
             htmlFor="email"
-            className="absolute -top-3 left-5 bg-white px-1 text-sm text-[#575D6A]"
+            className="absolute -top-3 left-5 bg-white px-1 text-sm text-[#575D6A] pointer-events-none opacity-0 group-focus-within:opacity-100 transition-opacity"
           >
             Email Address *
           </label>
-          <div className="flex items-center gap-3 border-2 border-gray-400 rounded-2xl px-4 h-[65px]">
+          <div className="flex items-center gap-3 border-2 border-gray-400 rounded-2xl px-4 h-[45px]">
             <input
-              className="flex-1 outline-none bg-transparent"
+              className="flex-1 outline-none bg-transparent focus:placeholder-transparent text-base"
               id="email"
               name="email"
               type="email"

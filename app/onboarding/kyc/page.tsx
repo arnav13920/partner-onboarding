@@ -1,11 +1,12 @@
+import KycDetails from "@/components/KycDetails";
 import Sidebar from "@/components/Sidebar";
 import React from "react";
 
 const page = () => {
   return (
-    <div>
+    <div className="flex">
       <Sidebar/>
-      
+      <KycDetails/>
     </div>
   );
 };

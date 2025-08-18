@@ -29,7 +29,11 @@ const About = () => {
          : "bg-white text-black"
      }`;
 
-  const isNextEnabled = q1 && q2 && q3;
+  const isNextEnabled = Boolean(
+    q1 &&
+      q2 &&
+      (q2 === "Individual/Sole Proprietorship" ? q3 : true)
+  );
 
   return (
     <div className="px-8 py-6 max-w-5xl">
@@ -95,7 +99,10 @@ const About = () => {
           {question2Options.map((label) => (
             <div key={label} className={gradientClasses}>
               <button
-                onClick={() => setQ2(label)}
+                onClick={() => {
+                  setQ2(label);
+                  setQ3(null);
+                }}
                 className={innerClasses(q2 === label)}
               >
                 {label}
@@ -106,7 +113,7 @@ const About = () => {
       </div>
 
       {/* Question 3 — Only visible if Q2 is answered */}
-      {q2 && (
+      {q2 === "Individual/Sole Proprietorship" && (
         <div className="mt-8">
           <p className="font-medium text-[#0F172A]">
             3. Are you: <span className="text-red-600">*</span>
