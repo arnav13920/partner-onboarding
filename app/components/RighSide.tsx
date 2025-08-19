@@ -13,7 +13,8 @@ const RightSide = () => {
     <div className="flex flex-col justify-center items-center px-6 py-8">
       {/* Title Section */}
       <h2 className="font-bold text-[40px] text-center text-[#002169] mb-2">
-        Become an Abhi Loans partner
+        Become an <span className="bg-gradient-to-l from-[#1A73E9] to-[#ED3237] 
+             bg-clip-text text-transparent hover:underline">Abhi Loans</span> partner
       </h2>
       <h4 className="font-bold text-[24px] text-center text-[#8090B4] mb-8">
         Supercharge your income
@@ -28,7 +29,7 @@ const RightSide = () => {
         {documents.map((doc, index) => (
           <div
             key={index}
-            className="flex items-center border w-[330px] h-[70px] rounded-md px-4 gap-4 text-[#002169] font-bold text-[15px] shadow-sm"
+            className="flex items-center border border-gray-300 shadow-md w-[330px] h-[70px] rounded-md px-4 gap-4 text-[#002169] font-bold text-[15px]"
           >
             <div className="h-[50px] w-[50px] bg-[#002169] rounded-full flex items-center justify-center">
               <Image src={doc.icon} alt={doc.label} height={23} width={20} />
@@ -39,7 +40,7 @@ const RightSide = () => {
       </div>
 
       {/* Button */}
-      <button className="font-bold text-[15px] text-white bg-[#002169] rounded-[50px] w-[300px] h-[64px] hover:bg-[#00164d] transition-colors">
+      <button className="font-bold text-[15px] cursor-pointer text-white bg-[#002169] rounded-[50px] w-[300px] h-[64px] hover:bg-[#00164d] transition-colors">
         Get Started
       </button>
     </div>

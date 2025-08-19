@@ -96,37 +96,38 @@ const ContactVerification = () => {
           >
             Mobile Number *
           </label>
-          <div className="flex items-center gap-3 border-2 border-gray-400 rounded-2xl px-4 h-[45px]">
-            <input
-              className="flex-1 outline-none bg-transparent focus:placeholder-transparent text-base"
-              id="mobileNumber"
-              name="mobileNumber"
-              type="tel"
-              maxLength={10}
-              value={mobile}
-              onChange={handleMobileChange}
-              placeholder="Your Mobile Number"
-              required
-            />
-
-            {/* ✅ Mobile Verify Arrow */}
-            <div
+          <div className="flex items-center gap-3">
+            <div className="flex items-center border-2 border-gray-400 rounded-2xl px-4 h-[45px] flex-1">
+              <input
+                className="flex-1 outline-none bg-transparent focus:placeholder-transparent text-base"
+                id="mobileNumber"
+                name="mobileNumber"
+                type="tel"
+                maxLength={10}
+                value={mobile}
+                onChange={handleMobileChange}
+                placeholder="Your Mobile Number"
+                required
+              />
+            </div>
+            {/* ✅ Mobile Verify Button outside border */}
+            <button
+              type="button"
               onClick={() => {
                 if (validateMobile(mobile)) {
                   setOtpType("mobile");
                   setShowOtpModal(true);
                 }
               }}
-              className={`h-10 w-10 rounded-full flex items-center justify-center transition-colors duration-300 cursor-pointer
-                ${validateMobile(mobile) ? "bg-[#1EA860]" : "bg-[#B7B9BF]"}`}
+              disabled={!validateMobile(mobile)}
+              className={`text-sm font-medium transition-colors  cursor-pointer duration-300 ${
+                validateMobile(mobile)
+                  ? "text-[#1EA860] hover:opacity-90"
+                  : "text-[#B7B9BF] cursor-not-allowed"
+              }`}
             >
-              <Image
-                src="/images/rightArrowIcon.png"
-                alt="arrowIcon"
-                width={20}
-                height={20}
-              />
-            </div>
+              Verify
+            </button>
           </div>
           {errors.mobile && (
             <p className="text-red-500 text-sm mt-1">{errors.mobile}</p>
@@ -141,39 +142,37 @@ const ContactVerification = () => {
           >
             Email Address *
           </label>
-          <div className="flex items-center gap-3 border-2 border-gray-400 rounded-2xl px-4 h-[45px]">
-            <input
-              className="flex-1 outline-none bg-transparent focus:placeholder-transparent text-base"
-              id="email"
-              name="email"
-              type="email"
-              value={email}
-              onChange={handleEmailChange}
-              placeholder="Your email address"
-              required
-            />
-            {/* ✅ Email Verify Arrow */}
-            <div
+          <div className="flex items-center gap-3">
+            <div className="flex items-center border-2 border-gray-400 rounded-2xl px-4 h-[45px] flex-1">
+              <input
+                className="flex-1 outline-none bg-transparent focus:placeholder-transparent text-base"
+                id="email"
+                name="email"
+                type="email"
+                value={email}
+                onChange={handleEmailChange}
+                placeholder="Your email address"
+                required
+              />
+            </div>
+            {/* ✅ Email Verify Button outside border */}
+            <button
+              type="button"
               onClick={() => {
                 if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
                   setOtpType("email");
                   setShowOtpModal(true);
                 }
               }}
-              className={`h-10 w-10 rounded-full flex items-center justify-center transition-colors duration-300 cursor-pointer
-                ${
-                  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
-                    ? "bg-[#1EA860]"
-                    : "bg-[#B7B9BF]"
-                }`}
+              disabled={!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)}
+              className={`text-sm font-medium transition-colors cursor-pointer duration-300 ${
+                /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+                  ? "text-[#1EA860] hover:opacity-90"
+                  : "text-[#B7B9BF] cursor-not-allowed"
+              }`}
             >
-              <Image
-                src="/images/rightArrowIcon.png"
-                alt="arrowIcon"
-                width={20}
-                height={20}
-              />
-            </div>
+              Verify
+            </button>
           </div>
           {errors.email && (
             <p className="text-red-500 text-sm mt-1">{errors.email}</p>

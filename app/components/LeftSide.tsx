@@ -7,7 +7,7 @@ const LeftSide = () => {
       {/* First logo */}
       <div className="mb-8">
         <Image
-          src="/images/AbhiLoansLogo.png"
+          src="/images/abhiLoans.svg"
           alt="logo"
           width={64}
           height={64}
@@ -17,7 +17,7 @@ const LeftSide = () => {
       {/* Second image */}
       <div>
         <Image
-          src="/images/Group.png"
+          src="/images/group.png"
           alt="Group"
           width={590}
           height={577}

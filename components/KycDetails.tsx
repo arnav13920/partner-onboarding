@@ -4,7 +4,8 @@ import React, { useState } from "react";
 import Image from "next/image";
 import PanInputFields from "./kycComponents/PanInputFields";
 import GstInputFields from "./kycComponents/GstInputFields";
-import BankInputFields from "./kycComponents/BankInputFields"
+import BankInputFields from "./kycComponents/BankInputFields";
+import RegistrationNumberInputs from "./kycComponents/RegistrationNumberInputs";
 
 const KycDetails = () => {
   const [isPanOpen, setIsPanOpen] = useState(true);
@@ -23,18 +24,16 @@ const KycDetails = () => {
         <div className="mt-4">
           <div className="flex items-center gap-3">
             <Image
-              src="/images/Aboutuser.png"
+              src="/images/kycDetailsIcon.png"
               alt="aboutUser"
               width={36}
               height={36}
             />
-            <p className="font-bold text-3xl text-[#0F172A]">
-              Contact Verification
-            </p>
+            <p className="font-bold text-3xl text-[#0F172A]">KYC Details</p>
           </div>
           <div className="mt-3 mb-3">
             <p className="text-lg font-bold text-[#575D6A]">
-              Let’s Confirm Your Contact Info
+              Let’s Verify Your Identity
             </p>
             <div className="flex items-start gap-3 mt-2 text-[#475569]">
               <Image
@@ -52,8 +51,9 @@ const KycDetails = () => {
           </div>
         </div>
         {/* Accordions for each step verification */}
+
+        {/* pan field */}
         <div className="flex flex-col">
-          {/* pan field */}
           <div className=" h-[65px] w-[850px] flex items-center justify-between mt-8 p-4">
             <p className="font-normal">PAN</p>
             <button
@@ -68,80 +68,99 @@ const KycDetails = () => {
                 alt="dropdownButton"
                 width={20}
                 height={20}
-                className={`${isPanOpen ? "rotate-180" : "rotate-0"} transition-transform duration-200`}
+                className={`${
+                  isPanOpen ? "rotate-180" : "rotate-0"
+                } transition-transform duration-200`}
               />
             </button>
           </div>
           {isPanOpen && (
             <div id="pan-accordion-panel" className="mt-2">
-              <PanInputFields/>
+              <PanInputFields />
             </div>
           )}
         </div>
-        <div className="h-[65px] w-[850px] flex items-center justify-between mt-8 p-4">
-            <p className="font-normal">Verify Bank Details</p>
-            <button
-              type="button"
-              onClick={() => setIsBankOpen((prev) => !prev)}
-              className="cursor-pointer"
-              aria-expanded={isBankOpen}
-              aria-controls="bank-accordion-panel"
-            >
-              <Image
-                src="/images/dropdown.png"
-                alt="dropdownButton"
-                width={20}
-                height={20}
-                className={`${isBankOpen ? "rotate-180" : "rotate-0"} transition-transform duration-200`}
-              />
-            </button>
+
+        {/* Bank Details */}
+        <div className="h-[65px] w-[850px] flex items-center justify-between mt-4 p-4">
+          <p className="font-normal">Bank Details</p>
+          <button
+            type="button"
+            onClick={() => setIsBankOpen((prev) => !prev)}
+            className="cursor-pointer"
+            aria-expanded={isBankOpen}
+            aria-controls="bank-accordion-panel"
+          >
+            <Image
+              src="/images/dropdown.png"
+              alt="dropdownButton"
+              width={20}
+              height={20}
+              className={`${
+                isBankOpen ? "rotate-180" : "rotate-0"
+              } transition-transform duration-200`}
+            />
+          </button>
+        </div>
+        {isBankOpen && (
+          <div id="bank-accordion-panel" className="mt-2">
+            <BankInputFields />
           </div>
-          {isBankOpen && (
-            <div id="bank-accordion-panel" className="mt-2">
-              <BankInputFields/>
-            </div>
-          )}
-          <div className=" h-[65px] w-[850px] flex items-center justify-between mt-8 p-4">
-            <p className="font-normal">Verify GST</p>
-            <button
-              type="button"
-              onClick={() => setIsGstOpen((prev) => !prev)}
-              className="cursor-pointer"
-              aria-expanded={isGstOpen}
-              aria-controls="gst-accordion-panel"
-            >
-              <Image
-                src="/images/dropdown.png"
-                alt="dropdownButton"
-                width={20}
-                height={20}
-                className={`${isGstOpen ? "rotate-180" : "rotate-0"} transition-transform duration-200`}
-              />
-            </button>
+        )}
+
+        {/* GST */}
+        <div className=" h-[65px] w-[850px] flex items-center justify-between mt-4 p-4">
+          <p className="font-normal">GST</p>
+          <button
+            type="button"
+            onClick={() => setIsGstOpen((prev) => !prev)}
+            className="cursor-pointer"
+            aria-expanded={isGstOpen}
+            aria-controls="gst-accordion-panel"
+          >
+            <Image
+              src="/images/dropdown.png"
+              alt="dropdownButton"
+              width={20}
+              height={20}
+              className={`${
+                isGstOpen ? "rotate-180" : "rotate-0"
+              } transition-transform duration-200`}
+            />
+          </button>
+        </div>
+        {isGstOpen && (
+          <div id="gst-accordion-panel" className="mt-2">
+            <GstInputFields />
           </div>
-          {isGstOpen && (
-            <div id="bank-accordion-panel" className="mt-2">
-              <GstInputFields/>
-            </div>
-          )}
-          <div className=" h-[65px] w-[850px] flex items-center justify-between mt-8 p-4">
-            <p className="font-normal">Registration Number</p>
-            <button
-              type="button"
-              onClick={() => setIsRegistrationOpen((prev) => !prev)}
-              className="cursor-pointer"
-              aria-expanded={isRegistrationOpen}
-              aria-controls="registration-accordion-panel"
-            >
-              <Image
-                src="/images/dropdown.png"
-                alt="dropdownButton"
-                width={20}
-                height={20}
-                className={`${isRegistrationOpen ? "rotate-180" : "rotate-0"} transition-transform duration-200`}
-              />
-            </button>
+        )}
+
+        {/* Registration Number */}
+        <div className=" h-[65px] w-[850px] flex items-center justify-between mt-4 p-4">
+          <p className="font-normal">Registration Number</p>
+          <button
+            type="button"
+            onClick={() => setIsRegistrationOpen((prev) => !prev)}
+            className="cursor-pointer"
+            aria-expanded={isRegistrationOpen}
+            aria-controls="registration-accordion-panel"
+          >
+            <Image
+              src="/images/dropdown.png"
+              alt="dropdownButton"
+              width={20}
+              height={20}
+              className={`${
+                isRegistrationOpen ? "rotate-180" : "rotate-0"
+              } transition-transform duration-200`}
+            />
+          </button>
+        </div>
+        {isRegistrationOpen && (
+          <div id="registration-accordion-panel" className="mt-2">
+            <RegistrationNumberInputs />
           </div>
+        )}
       </div>
     </>
   );

@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 
 const steps = [
   {
-    route: "/onboarding/profiling",
+    route: "/onboarding/about",
     icon: "/images/AboutCard.png",
     title: "About You",
     desc: "Tell us about your registration type and business structure",
