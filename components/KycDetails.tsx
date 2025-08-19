@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import PanInputFields from "./kycComponents/PanInputFields";
 import GstInputFields from "./kycComponents/GstInputFields";
+import BankInputFields from "./kycComponents/BankInputFields"
 
 const KycDetails = () => {
   const [isPanOpen, setIsPanOpen] = useState(true);
@@ -77,7 +78,7 @@ const KycDetails = () => {
             </div>
           )}
         </div>
-        <div className="border-2 border-[#CBD5E1] rounded-2xl h-[65px] w-[850px] flex items-center justify-between mt-8 p-4">
+        <div className="h-[65px] w-[850px] flex items-center justify-between mt-8 p-4">
             <p className="font-normal">Verify Bank Details</p>
             <button
               type="button"
@@ -89,18 +90,18 @@ const KycDetails = () => {
               <Image
                 src="/images/dropdown.png"
                 alt="dropdownButton"
-                width={24}
-                height={24}
+                width={20}
+                height={20}
                 className={`${isBankOpen ? "rotate-180" : "rotate-0"} transition-transform duration-200`}
               />
             </button>
           </div>
           {isBankOpen && (
             <div id="bank-accordion-panel" className="mt-2">
-              <GstInputFields/>
+              <BankInputFields/>
             </div>
           )}
-          <div className="border-2 border-[#CBD5E1] rounded-2xl h-[65px] w-[850px] flex items-center justify-between mt-8 p-4">
+          <div className=" h-[65px] w-[850px] flex items-center justify-between mt-8 p-4">
             <p className="font-normal">Verify GST</p>
             <button
               type="button"
@@ -112,13 +113,18 @@ const KycDetails = () => {
               <Image
                 src="/images/dropdown.png"
                 alt="dropdownButton"
-                width={24}
-                height={24}
+                width={20}
+                height={20}
                 className={`${isGstOpen ? "rotate-180" : "rotate-0"} transition-transform duration-200`}
               />
             </button>
           </div>
-          <div className="border-2 border-[#CBD5E1] rounded-2xl h-[65px] w-[850px] flex items-center justify-between mt-8 p-4">
+          {isGstOpen && (
+            <div id="bank-accordion-panel" className="mt-2">
+              <GstInputFields/>
+            </div>
+          )}
+          <div className=" h-[65px] w-[850px] flex items-center justify-between mt-8 p-4">
             <p className="font-normal">Registration Number</p>
             <button
               type="button"
@@ -130,8 +136,8 @@ const KycDetails = () => {
               <Image
                 src="/images/dropdown.png"
                 alt="dropdownButton"
-                width={24}
-                height={24}
+                width={20}
+                height={20}
                 className={`${isRegistrationOpen ? "rotate-180" : "rotate-0"} transition-transform duration-200`}
               />
             </button>
