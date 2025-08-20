@@ -30,7 +30,7 @@ const steps = [
     desc: "Enter details of the authorized person representing your business",
   },
   {
-    route: "/onboarding/esign",
+    route: "/onboarding/eSigning",
     icon: "/images/eSign.png",
     title: "eSigning",
     desc: "Digitally sign your partner agreement to complete onboarding",

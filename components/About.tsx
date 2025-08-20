@@ -18,14 +18,14 @@ const About = () => {
   const question2Options = ["Company", "Individual/Sole Proprietorship"];
   const question3Options = ["Only Individual", "Sole Proprietorship"];
 
-  const gradientClasses =
-    "bg-gradient-to-b from-[#ED323733] to-[#1A73E933] p-[2px] rounded-full";
+  const gradientClasses ="bg-[#b6b9be] p-[2px] rounded-full"
+    // "bg-gradient-to-b from-[#ED323733] to-[#1A73E933] p-[2px] rounded-full";
 
   const innerClasses = (selected: boolean) =>
     `px-4 py-2 rounded-full text-sm font-medium w-full h-full transition 
      ${
        selected
-         ? "bg-gradient-to-r from-[#ED3237] to-[#1A73E9] text-white"
+         ? "bg-[#0F172A] text-white"
          : "bg-white text-black"
      }`;
 

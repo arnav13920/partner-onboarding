@@ -21,14 +21,24 @@ const GstInputFields = () => {
             <button
               type="button"
               onClick={() => setHasGst(true)}
-              className="cursor-pointer w-[140px] h-[42px] border-2 border-gray-200 rounded-full"
+              className={`cursor-pointer w-[140px] h-[42px] border-2 rounded-full transition-colors ${
+                hasGst === true
+                  ? "bg-[#0F172A] text-white border-[#0F172A]"
+                  : "bg-white text-[#0F172A] border-[#B7B9BF] hover:border-[#0F172A]"
+              }`}
+              aria-pressed={hasGst === true}
             >
               Yes
             </button>
             <button
               type="button"
               onClick={() => setHasGst(false)}
-              className="cursor-pointer w-[140px] h-[42px] border-2 border-gray-200 p-[2px] rounded-full"
+              className={`cursor-pointer w-[140px] h-[42px] border-2 rounded-full transition-colors ${
+                hasGst === false
+                  ? "bg-[#0F172A] text-white border-[#0F172A]"
+                  : "bg-white text-[#0F172A] border-[#B7B9BF] hover:border-[#0F172A]"
+              }`}
+              aria-pressed={hasGst === false}
             >
               No
             </button>
@@ -75,9 +85,17 @@ const GstInputFields = () => {
       )}
       {hasGst === false && (
         <div className=" p-2 rounded-2xl gap-3 flex">
-          <p className="text-center">Upload GST Declaration Certificate </p>
-          <input id="gstDeclaration" type="file" accept="application/pdf,.pdf" className="hidden" />
-          <label htmlFor="gstDeclaration" className="flex justify-center items-center cursor-pointer">
+          <p className="text-center pl-3">Upload GST Declaration Certificate </p>
+          <input
+            id="gstDeclaration"
+            type="file"
+            accept="application/pdf,.pdf"
+            className="hidden"
+          />
+          <label
+            htmlFor="gstDeclaration"
+            className="flex justify-center items-center cursor-pointer"
+          >
             <Image
               src="/images/FileUploadIcon.png"
               alt="uploadFile"

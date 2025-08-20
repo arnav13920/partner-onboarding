@@ -12,6 +12,7 @@ const KycDetails = () => {
   const [isBankOpen, setIsBankOpen] = useState(false);
   const [isGstOpen, setIsGstOpen] = useState(false);
   const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
+  const isNextEnabled = false;
   return (
     <>
       <div className="px-14 py-6 max-w-5xl">
@@ -51,18 +52,24 @@ const KycDetails = () => {
           </div>
         </div>
         {/* Accordions for each step verification */}
-
-        {/* pan field */}
-        <div className="flex flex-col">
-          <div className=" h-[65px] w-[850px] flex items-center justify-between mt-8 p-4">
-            <p className="font-normal">PAN</p>
-            <button
-              type="button"
-              onClick={() => setIsPanOpen((prev) => !prev)}
-              className="cursor-pointer"
+        <div className="border border-gray-300 rounded-md shadow-md px-8">
+          {/* pan field */}
+          <div className="flex flex-col">
+            <div
+              className=" h-[65px] w-[850px] flex items-center justify-between mt-2 p-4 cursor-pointer"
+              role="button"
+              tabIndex={0}
               aria-expanded={isPanOpen}
               aria-controls="pan-accordion-panel"
+              onClick={() => setIsPanOpen((prev) => !prev)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  setIsPanOpen((prev) => !prev);
+                }
+              }}
             >
+              <p className="font-normal">PAN</p>
               <Image
                 src="/images/dropdown.png"
                 alt="dropdownButton"
@@ -72,25 +79,30 @@ const KycDetails = () => {
                   isPanOpen ? "rotate-180" : "rotate-0"
                 } transition-transform duration-200`}
               />
-            </button>
-          </div>
-          {isPanOpen && (
-            <div id="pan-accordion-panel" className="mt-2">
-              <PanInputFields />
             </div>
-          )}
-        </div>
+            {isPanOpen && (
+              <div id="pan-accordion-panel" className="mt-2">
+                <PanInputFields />
+              </div>
+            )}
+          </div>
 
-        {/* Bank Details */}
-        <div className="h-[65px] w-[850px] flex items-center justify-between mt-4 p-4">
-          <p className="font-normal">Bank Details</p>
-          <button
-            type="button"
-            onClick={() => setIsBankOpen((prev) => !prev)}
-            className="cursor-pointer"
+          {/* Bank Details */}
+          <div
+            className="h-[65px] w-[850px] flex items-center justify-between mt-4 p-4 cursor-pointer"
+            role="button"
+            tabIndex={0}
             aria-expanded={isBankOpen}
             aria-controls="bank-accordion-panel"
+            onClick={() => setIsBankOpen((prev) => !prev)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                setIsBankOpen((prev) => !prev);
+              }
+            }}
           >
+            <p className="font-normal">Bank Details</p>
             <Image
               src="/images/dropdown.png"
               alt="dropdownButton"
@@ -100,24 +112,29 @@ const KycDetails = () => {
                 isBankOpen ? "rotate-180" : "rotate-0"
               } transition-transform duration-200`}
             />
-          </button>
-        </div>
-        {isBankOpen && (
-          <div id="bank-accordion-panel" className="mt-2">
-            <BankInputFields />
           </div>
-        )}
+          {isBankOpen && (
+            <div id="bank-accordion-panel" className="mt-2">
+              <BankInputFields />
+            </div>
+          )}
 
-        {/* GST */}
-        <div className=" h-[65px] w-[850px] flex items-center justify-between mt-4 p-4">
-          <p className="font-normal">GST</p>
-          <button
-            type="button"
-            onClick={() => setIsGstOpen((prev) => !prev)}
-            className="cursor-pointer"
+          {/* GST */}
+          <div
+            className=" h-[65px] w-[850px] flex items-center justify-between mt-4 p-4 cursor-pointer"
+            role="button"
+            tabIndex={0}
             aria-expanded={isGstOpen}
             aria-controls="gst-accordion-panel"
+            onClick={() => setIsGstOpen((prev) => !prev)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                setIsGstOpen((prev) => !prev);
+              }
+            }}
           >
+            <p className="font-normal">GST</p>
             <Image
               src="/images/dropdown.png"
               alt="dropdownButton"
@@ -127,24 +144,29 @@ const KycDetails = () => {
                 isGstOpen ? "rotate-180" : "rotate-0"
               } transition-transform duration-200`}
             />
-          </button>
-        </div>
-        {isGstOpen && (
-          <div id="gst-accordion-panel" className="mt-2">
-            <GstInputFields />
           </div>
-        )}
+          {isGstOpen && (
+            <div id="gst-accordion-panel" className="mt-2">
+              <GstInputFields />
+            </div>
+          )}
 
-        {/* Registration Number */}
-        <div className=" h-[65px] w-[850px] flex items-center justify-between mt-4 p-4">
-          <p className="font-normal">Registration Number</p>
-          <button
-            type="button"
-            onClick={() => setIsRegistrationOpen((prev) => !prev)}
-            className="cursor-pointer"
+          {/* Registration Number */}
+          <div
+            className=" h-[65px] w-[850px] flex items-center justify-between mt-4 p-4 cursor-pointer"
+            role="button"
+            tabIndex={0}
             aria-expanded={isRegistrationOpen}
             aria-controls="registration-accordion-panel"
+            onClick={() => setIsRegistrationOpen((prev) => !prev)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                setIsRegistrationOpen((prev) => !prev);
+              }
+            }}
           >
+            <p className="font-normal">Registration Number</p>
             <Image
               src="/images/dropdown.png"
               alt="dropdownButton"
@@ -154,13 +176,31 @@ const KycDetails = () => {
                 isRegistrationOpen ? "rotate-180" : "rotate-0"
               } transition-transform duration-200`}
             />
+          </div>
+          {isRegistrationOpen && (
+            <div id="registration-accordion-panel" className="mt-2 mb-2">
+              <RegistrationNumberInputs />
+            </div>
+          )}
+        </div>
+
+        {/* Back & Next Buttons */}
+        <div className="mt-20 flex  w-[900px]">
+          <button className="px-8 py-2 rounded-full font-medium border border-gray-400 text-gray-600 hover:bg-gray-100 mr-4">
+            Back
+          </button>
+
+          <button
+            className={`px-8 py-2 rounded-full font-medium transition ${
+              isNextEnabled
+                ? "bg-blue-600 text-white hover:bg-blue-700"
+                : "bg-gray-300 text-white cursor-not-allowed"
+            }`}
+            disabled={!isNextEnabled}
+          >
+            Next
           </button>
         </div>
-        {isRegistrationOpen && (
-          <div id="registration-accordion-panel" className="mt-2">
-            <RegistrationNumberInputs />
-          </div>
-        )}
       </div>
     </>
   );

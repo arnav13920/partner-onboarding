@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 type VerifyOtpModalProps = {
   onClose: () => void;
@@ -8,9 +8,14 @@ type VerifyOtpModalProps = {
   type: "mobile" | "email" | null;
 };
 
-const VerifyOtpModal: React.FC<VerifyOtpModalProps> = ({ onClose, contactInfo, type }) => {
+const VerifyOtpModal: React.FC<VerifyOtpModalProps> = ({
+  onClose,
+  contactInfo,
+  type,
+}) => {
   const [otp, setOtp] = useState<string[]>(Array(6).fill(""));
   const inputsRef = useRef<(HTMLInputElement | null)[]>([]);
+  const [secondsLeft, setSecondsLeft] = useState<number>(30);
 
   const handleChange = (value: string, index: number) => {
     if (/^[0-9]?$/.test(value)) {
@@ -57,11 +62,34 @@ const VerifyOtpModal: React.FC<VerifyOtpModalProps> = ({ onClose, contactInfo, t
 
   const isOtpComplete = otp.every((digit) => digit !== "");
 
+  useEffect(() => {
+    if (secondsLeft <= 0) {
+      return;
+    }
+    const intervalId = setInterval(() => {
+      setSecondsLeft((prev) => prev - 1);
+    }, 1000);
+    return () => clearInterval(intervalId);
+  }, [secondsLeft]);
+
+  const handleResend = () => {
+    if (secondsLeft > 0) {
+      return;
+    }
+    setOtp(Array(6).fill(""));
+    setSecondsLeft(30);
+    inputsRef.current[0]?.focus();
+  };
+
   return (
     <div className="fixed inset-0 flex justify-center items-center bg-black/50 backdrop-blur-[1px] z-50">
-
       <div className="w-[600px] bg-white rounded-2xl shadow-lg p-8 flex flex-col">
-        <button onClick={onClose} className="self-end text-sm text-gray-500 hover:text-gray-700">✕</button>
+        <button
+          onClick={onClose}
+          className="self-end text-sm text-gray-500 hover:text-gray-700"
+        >
+          ✕
+        </button>
         {/* Title */}
         <h2 className="text-[32px] font-bold mb-2">Verify OTP</h2>
         <p className="text-[#878B94] font-normal mb-6">
@@ -73,10 +101,7 @@ const VerifyOtpModal: React.FC<VerifyOtpModalProps> = ({ onClose, contactInfo, t
         {/* OTP Inputs */}
         <div className="flex gap-3 mb-4 justify-around">
           {otp.map((digit, index) => (
-            <div
-              key={index}
-              className="rounded-2xl p-[1px] bg-gradient-to-b from-[#1A73E9] to-[#ED3237]"
-            >
+            <div key={index} className="rounded-2xl p-[1px] bg-[#B7B9BF]">
               <input
                 ref={(el: HTMLInputElement | null): void => {
                   inputsRef.current[index] = el;
@@ -94,14 +119,28 @@ const VerifyOtpModal: React.FC<VerifyOtpModalProps> = ({ onClose, contactInfo, t
           ))}
         </div>
 
-        {/* Resend Link */}
-        <button
-          className="text-sm font-medium mb-6 pl-2 text-end cursor-pointer
-             bg-gradient-to-b from-[#1A73E9] to-[#ED3237] 
-             bg-clip-text text-transparent hover:underline"
-        >
-          Resend OTP
-        </button>
+        {/* Resend */}
+        <div className="flex items-center justify-between mb-6 gap-3">
+          <span
+            className={`text-sm text-[#878B94] ${
+              secondsLeft === 0 ? "opacity-0" : "opacity-100"
+            }`}
+          >
+            Resend in {secondsLeft}s
+          </span>
+          <button
+            type="button"
+            onClick={handleResend}
+            disabled={secondsLeft > 0}
+            className={`text-sm font-medium pl-2 ${
+              secondsLeft > 0
+                ? "text-[#B7B9BF] cursor-not-allowed"
+                : "cursor-pointer bg-gradient-to-b from-[#1A73E9] to-[#ED3237] bg-clip-text text-end text-transparent hover:underline"
+            }`}
+          >
+            Resend OTP
+          </button>
+        </div>
 
         {/* Verify Button */}
         <button

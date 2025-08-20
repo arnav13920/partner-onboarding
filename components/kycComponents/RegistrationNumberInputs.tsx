@@ -30,11 +30,11 @@ const RegistrationNumberInputs = () => {
           </label>
         </div>
       </div>
-      <div className="justify-end flex">
+      <div className="justify-end flex mb-2">
         <button
           type="button"
           disabled={!isValid}
-          className={`mt-6 w-[140px] h-[42px] cursor-pointer rounded-full text-sm font-medium transition-colors ${
+          className={`mt-6  w-[140px] h-[42px] cursor-pointer rounded-full text-sm font-medium transition-colors ${
             isValid
               ? "bg-blue-600 text-white hover:bg-blue-700"
               : "bg-gray-300 text-gray-500 cursor-not-allowed"

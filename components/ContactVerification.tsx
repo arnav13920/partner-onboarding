@@ -98,6 +98,7 @@ const ContactVerification = () => {
           </label>
           <div className="flex items-center gap-3">
             <div className="flex items-center border-2 border-gray-400 rounded-2xl px-4 h-[45px] flex-1">
+              <span className="text-[#575D6A] mr-2">+91</span>
               <input
                 className="flex-1 outline-none bg-transparent focus:placeholder-transparent text-base"
                 id="mobileNumber"
@@ -202,7 +203,7 @@ const ContactVerification = () => {
       {showOtpModal && otpType && (
         <VerifyOtpModal
           onClose={() => setShowOtpModal(false)}
-          contactInfo={otpType === "mobile" ? mobile : email}
+          contactInfo={otpType === "mobile" ? `+91 ${mobile}` : email}
           type={otpType}
         />
       )}
