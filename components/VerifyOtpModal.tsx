@@ -6,12 +6,16 @@ type VerifyOtpModalProps = {
   onClose: () => void;
   contactInfo: string;
   type: "mobile" | "email" | null;
+  verifyOtpAction: (formData: FormData) => Promise<any>;
+  onVerified: () => void;
 };
 
 const VerifyOtpModal: React.FC<VerifyOtpModalProps> = ({
   onClose,
   contactInfo,
   type,
+  verifyOtpAction,
+  onVerified,
 }) => {
   const [otp, setOtp] = useState<string[]>(Array(6).fill(""));
   const inputsRef = useRef<(HTMLInputElement | null)[]>([]);
@@ -99,60 +103,70 @@ const VerifyOtpModal: React.FC<VerifyOtpModalProps> = ({
         </p>
 
         {/* OTP Inputs */}
-        <div className="flex gap-3 mb-4 justify-around">
-          {otp.map((digit, index) => (
-            <div key={index} className="rounded-2xl p-[1px] bg-[#B7B9BF]">
-              <input
-                ref={(el: HTMLInputElement | null): void => {
-                  inputsRef.current[index] = el;
-                }}
-                type="text"
-                maxLength={1}
-                value={digit}
-                onChange={(e) => handleChange(e.target.value, index)}
-                onKeyDown={(e) => handleKeyDown(e, index)}
-                onPaste={(e) => handlePaste(e, index)} // 🆕 paste handler
-                className="w-[70px] h-[90px] rounded-2xl text-center text-xl 
-                   bg-white outline-none focus:bg-gray-50"
-              />
-            </div>
-          ))}
-        </div>
-
-        {/* Resend */}
-        <div className="flex items-center justify-between mb-6 gap-3">
-          <span
-            className={`text-sm text-[#878B94] ${
-              secondsLeft === 0 ? "opacity-0" : "opacity-100"
-            }`}
-          >
-            Resend in {secondsLeft}s
-          </span>
-          <button
-            type="button"
-            onClick={handleResend}
-            disabled={secondsLeft > 0}
-            className={`text-sm font-medium pl-2 ${
-              secondsLeft > 0
-                ? "text-[#B7B9BF] cursor-not-allowed"
-                : "cursor-pointer bg-gradient-to-b from-[#1A73E9] to-[#ED3237] bg-clip-text text-end text-transparent hover:underline"
-            }`}
-          >
-            Resend OTP
-          </button>
-        </div>
-
-        {/* Verify Button */}
-        <button
-          disabled={!isOtpComplete}
-          className={`w-full py-3 rounded-full text-white font-medium ${
-            isOtpComplete
-              ? "bg-blue-600 hover:bg-blue-700"
-              : "bg-gray-300 cursor-not-allowed"
-          }`}
+        <form
+          action={async (fd: FormData) => {
+            await verifyOtpAction(fd);
+            onVerified();
+            onClose();
+          }}
         >
-          Verify
-        </button>
+          <div className="flex gap-3 mb-4 justify-around">
+            {otp.map((digit, index) => (
+              <div key={index} className="rounded-2xl p-[1px] bg-[#B7B9BF]">
+                <input
+                  ref={(el: HTMLInputElement | null): void => {
+                    inputsRef.current[index] = el;
+                  }}
+                  type="text"
+                  maxLength={1}
+                  value={digit}
+                  onChange={(e) => handleChange(e.target.value, index)}
+                  onKeyDown={(e) => handleKeyDown(e, index)}
+                  onPaste={(e) => handlePaste(e, index)} // 🆕 paste handler
+                  className="w-[70px] h-[90px] rounded-2xl text-center text-xl 
+                     bg-white outline-none focus:bg-gray-50"
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* Resend */}
+          <div className="flex items-center justify-between mb-6 gap-3">
+            <span
+              className={`text-sm text-[#878B94] ${
+                secondsLeft === 0 ? "opacity-0" : "opacity-100"
+              }`}
+            >
+              Resend in {secondsLeft}s
+            </span>
+            <button
+              type="button"
+              onClick={handleResend}
+              disabled={secondsLeft > 0}
+              className={`text-sm font-medium pl-2 ${
+                secondsLeft > 0
+                  ? "text-[#B7B9BF] cursor-not-allowed"
+                  : "cursor-pointer bg-gradient-to-b from-[#1A73E9] to-[#ED3237] bg-clip-text text-end text-transparent hover:underline"
+              }`}
+            >
+              Resend OTP
+            </button>
+          </div>
+
+          {/* Verify Button */}
+          <input type="hidden" name="otp" value={otp.join("")} />
+          <button
+            type="submit"
+            disabled={!isOtpComplete}
+            className={`w-full py-3 rounded-full text-white font-medium ${
+              isOtpComplete
+                ? "bg-blue-600 hover:bg-blue-700"
+                : "bg-gray-300 cursor-not-allowed"
+            }`}
+          >
+            Verify
+          </button>
+        </form>
       </div>
     </div>
   );

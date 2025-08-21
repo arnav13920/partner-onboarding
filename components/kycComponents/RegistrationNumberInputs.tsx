@@ -1,8 +1,18 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
-const RegistrationNumberInputs = () => {
+type RegistrationNumberInputsProps = {
+  verifySrnAction: (formData: FormData) => Promise<any>;
+  isVerified?: boolean;
+  onVerified?: () => void;
+};
+
+const RegistrationNumberInputs: React.FC<RegistrationNumberInputsProps> = ({
+  verifySrnAction,
+  isVerified,
+  onVerified,
+}) => {
   const [registrationNumber, setRegistrationNumber] = useState("");
 
   // Simple validation: 5-30 uppercase letters/digits and allowed separators
@@ -31,20 +41,31 @@ const RegistrationNumberInputs = () => {
         </div>
       </div>
       <div className="justify-end flex mb-2">
-        <button
-          type="button"
-          disabled={!isValid}
-          className={`mt-6  w-[140px] h-[42px] cursor-pointer rounded-full text-sm font-medium transition-colors ${
-            isValid
-              ? "bg-blue-600 text-white hover:bg-blue-700"
-              : "bg-gray-300 text-gray-500 cursor-not-allowed"
-          }`}
+        <form
+          action={async (fd: FormData) => {
+            if (!isValid) return;
+            fd.set("srn_number", normalized);
+            await verifySrnAction(fd);
+            onVerified?.();
+          }}
         >
-          Verify
-        </button>
+          <button
+            type="submit"
+            disabled={!isValid || isVerified}
+            className={`mt-6  w-[140px] h-[42px] cursor-pointer rounded-full text-sm font-medium transition-colors ${
+              isVerified
+                ? "bg-green-600 text-white"
+                : isValid
+                ? "bg-blue-600 text-white hover:bg-blue-700"
+                : "bg-gray-300 text-gray-500 cursor-not-allowed"
+            }`}
+          >
+            {isVerified ? "Verified" : "Verify"}
+          </button>
+        </form>
       </div>
     </>
   );
-}
+};
 
 export default RegistrationNumberInputs;

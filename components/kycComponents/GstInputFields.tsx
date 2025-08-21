@@ -3,7 +3,17 @@
 import React, { useState } from "react";
 import Image from "next/image";
 
-const GstInputFields = () => {
+type GstInputFieldsProps = {
+  verifyGstAction: (formData: FormData) => Promise<any>;
+  isVerified?: boolean;
+  onVerified?: () => void;
+};
+
+const GstInputFields: React.FC<GstInputFieldsProps> = ({
+  verifyGstAction,
+  isVerified,
+  onVerified,
+}) => {
   const [hasGst, setHasGst] = useState<boolean | null>(null);
   const [gstin, setGstin] = useState("");
 
@@ -53,7 +63,7 @@ const GstInputFields = () => {
               <input
                 id="gstNumber"
                 type="text"
-                placeholder="e.g., 27ABCDE1234F1Z5"
+                placeholder="GST Number"
                 value={normalizedGstin}
                 onChange={(e) => setGstin(e.target.value.toUpperCase())}
                 maxLength={15}
@@ -69,23 +79,36 @@ const GstInputFields = () => {
           </div>
           {/* Verify Button */}
           <div className="justify-end flex">
-            <button
-              type="button"
-              disabled={!isValidGstin}
-              className={`mt-6 w-[140px] h-[42px] rounded-full text-sm font-medium transition-colors ${
-                isValidGstin
-                  ? "bg-blue-600 text-white hover:bg-blue-700"
-                  : "bg-gray-300 text-gray-500 cursor-not-allowed"
-              }`}
+            <form
+              action={async (fd: FormData) => {
+                if (!isValidGstin) return;
+                fd.set("gst_number", normalizedGstin);
+                await verifyGstAction(fd);
+                onVerified?.();
+              }}
             >
-              Verify
-            </button>
+              <button
+                type="submit"
+                disabled={!isValidGstin || isVerified}
+                className={`mt-6 w-[140px] h-[42px] rounded-full text-sm font-medium transition-colors ${
+                  isVerified
+                    ? "bg-green-600 text-white"
+                    : isValidGstin
+                    ? "bg-blue-600 text-white hover:bg-blue-700"
+                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                }`}
+              >
+                {isVerified ? "Verified" : "Verify"}
+              </button>
+            </form>
           </div>
         </>
       )}
       {hasGst === false && (
-        <div className=" p-2 rounded-2xl gap-3 flex">
-          <p className="text-center pl-3">Upload GST Declaration Certificate </p>
+        <div className=" p-2 rounded-2xl gap-3 flex border-1 border-[B7B9BF] w-[450px] justify-center items-center">
+          <p className="text-center pl-3">
+            Upload GST Declaration Certificate{" "}
+          </p>
           <input
             id="gstDeclaration"
             type="file"

@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 type Contact = {
   firstName: string;
@@ -17,11 +18,35 @@ const emptyContact: Contact = {
   email: "",
 };
 
-const ContactForm = () => {
+type ContactFormProps = {
+  submitAction: (
+    items: {
+      firstName: string;
+      lastName: string;
+      mobileNumber: string;
+      email: string;
+    }[]
+  ) => Promise<any>;
+};
+
+const ContactForm: React.FC<ContactFormProps> = ({ submitAction }) => {
   const MAX_CONTACTS = 3;
   const [contacts, setContacts] = useState<Contact[]>([emptyContact]);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const router = useRouter();
 
-  const isNextEnabled = false;
+  const isNextEnabled = useMemo(() => {
+    if (contacts.length === 0) return false;
+    return contacts.every((c) => {
+      const isValidFirstName = /^[A-Za-z]{2,}$/.test(c.firstName);
+      const isValidLastName = /^[A-Za-z]{2,}$/.test(c.lastName);
+      const isValidMobile = /^[6-9]\d{9}$/.test(c.mobile);
+      const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(c.email);
+      return (
+        isValidFirstName && isValidLastName && isValidMobile && isValidEmail
+      );
+    });
+  }, [contacts]);
 
   return (
     <>
@@ -238,11 +263,32 @@ const ContactForm = () => {
         )}
         {/* Back & Next Buttons */}
         <div className="mt-12 flex  w-[900px]">
-          <button className="px-8 py-2 rounded-full font-medium border border-gray-400 text-gray-600 hover:bg-gray-100 mr-4">
+          <button
+            type="button"
+            onClick={() => router.push("/onboarding/keyPersonDetails")}
+            className="px-8 py-2 rounded-full font-medium border border-gray-400 text-gray-600 hover:bg-gray-100 mr-4"
+          >
             Back
           </button>
 
           <button
+            type="button"
+            onClick={async () => {
+              if (!isNextEnabled) return;
+              setSubmitError(null);
+              const payload = contacts.map((c) => ({
+                firstName: c.firstName,
+                lastName: c.lastName,
+                mobileNumber: c.mobile,
+                email: c.email,
+              }));
+              try {
+                await submitAction(payload);
+                router.push("/onboarding/eSigning");
+              } catch (e) {
+                setSubmitError("Request failed");
+              }
+            }}
             className={`px-8 py-2 rounded-full font-medium transition ${
               isNextEnabled
                 ? "bg-blue-600 text-white hover:bg-blue-700"
@@ -253,6 +299,9 @@ const ContactForm = () => {
             Next
           </button>
         </div>
+        {submitError && (
+          <p className="text-red-600 text-sm mt-3">{submitError}</p>
+        )}
       </div>
     </>
   );

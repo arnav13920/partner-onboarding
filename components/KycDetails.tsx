@@ -6,13 +6,32 @@ import PanInputFields from "./kycComponents/PanInputFields";
 import GstInputFields from "./kycComponents/GstInputFields";
 import BankInputFields from "./kycComponents/BankInputFields";
 import RegistrationNumberInputs from "./kycComponents/RegistrationNumberInputs";
+import { useRouter } from "next/navigation";
 
-const KycDetails = () => {
+type KycDetailsProps = {
+  verifyPanAction: (formData: FormData) => Promise<any>;
+  verifyBankAction: (formData: FormData) => Promise<any>;
+  verifyGstAction: (formData: FormData) => Promise<any>;
+  verifySrnAction: (formData: FormData) => Promise<any>;
+};
+
+const KycDetails: React.FC<KycDetailsProps> = ({
+  verifyPanAction,
+  verifyBankAction,
+  verifyGstAction,
+  verifySrnAction,
+}) => {
   const [isPanOpen, setIsPanOpen] = useState(true);
   const [isBankOpen, setIsBankOpen] = useState(false);
   const [isGstOpen, setIsGstOpen] = useState(false);
   const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
-  const isNextEnabled = false;
+  const [isPanVerified, setIsPanVerified] = useState(false);
+  const [isBankVerified, setIsBankVerified] = useState(false);
+  const [isGstVerified, setIsGstVerified] = useState(false);
+  const [isSrnVerified, setIsSrnVerified] = useState(false);
+  const router = useRouter();
+  const isNextEnabled =
+    isPanVerified && isBankVerified && isGstVerified && isSrnVerified;
   return (
     <>
       <div className="px-14 py-6 max-w-5xl">
@@ -82,7 +101,15 @@ const KycDetails = () => {
             </div>
             {isPanOpen && (
               <div id="pan-accordion-panel" className="mt-2">
-                <PanInputFields />
+                <PanInputFields
+                  verifyPanAction={verifyPanAction}
+                  isVerified={isPanVerified}
+                  onVerified={() => {
+                    setIsPanVerified(true);
+                    setIsPanOpen(false);
+                    setIsBankOpen(true);
+                  }}
+                />
               </div>
             )}
           </div>
@@ -115,7 +142,15 @@ const KycDetails = () => {
           </div>
           {isBankOpen && (
             <div id="bank-accordion-panel" className="mt-2">
-              <BankInputFields />
+              <BankInputFields
+                verifyBankAction={verifyBankAction}
+                isVerified={isBankVerified}
+                onVerified={() => {
+                  setIsBankVerified(true);
+                  setIsBankOpen(false);
+                  setIsGstOpen(true);
+                }}
+              />
             </div>
           )}
 
@@ -147,7 +182,15 @@ const KycDetails = () => {
           </div>
           {isGstOpen && (
             <div id="gst-accordion-panel" className="mt-2">
-              <GstInputFields />
+              <GstInputFields
+                verifyGstAction={verifyGstAction}
+                isVerified={isGstVerified}
+                onVerified={() => {
+                  setIsGstVerified(true);
+                  setIsGstOpen(false);
+                  setIsRegistrationOpen(true);
+                }}
+              />
             </div>
           )}
 
@@ -179,18 +222,33 @@ const KycDetails = () => {
           </div>
           {isRegistrationOpen && (
             <div id="registration-accordion-panel" className="mt-2 mb-2">
-              <RegistrationNumberInputs />
+              <RegistrationNumberInputs
+                verifySrnAction={verifySrnAction}
+                isVerified={isSrnVerified}
+                onVerified={() => {
+                  setIsSrnVerified(true);
+                  setIsRegistrationOpen(false);
+                }}
+              />
             </div>
           )}
         </div>
 
         {/* Back & Next Buttons */}
         <div className="mt-20 flex  w-[900px]">
-          <button className="px-8 py-2 rounded-full font-medium border border-gray-400 text-gray-600 hover:bg-gray-100 mr-4">
+          <button
+            type="button"
+            onClick={() => router.push("/onboarding/about")}
+            className="px-8 py-2 rounded-full font-medium border border-gray-400 text-gray-600 hover:bg-gray-100 mr-4"
+          >
             Back
           </button>
 
           <button
+            type="button"
+            onClick={() => {
+              if (isNextEnabled) router.push("/onboarding/keyPersonDetails");
+            }}
             className={`px-8 py-2 rounded-full font-medium transition ${
               isNextEnabled
                 ? "bg-blue-600 text-white hover:bg-blue-700"

@@ -1,11 +1,18 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
-const About = () => {
+type AboutProps = {
+  onSubmit: (formData: FormData) => Promise<any>;
+};
+
+const About: React.FC<AboutProps> = ({ onSubmit }) => {
   const [q1, setQ1] = useState<string | null>(null);
   const [q2, setQ2] = useState<string | null>(null);
   const [q3, setQ3] = useState<string | null>(null);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const router = useRouter();
 
   const question1Options = [
     "Direct Selling Agent",
@@ -18,27 +25,23 @@ const About = () => {
   const question2Options = ["Company", "Individual/Sole Proprietorship"];
   const question3Options = ["Only Individual", "Sole Proprietorship"];
 
-  const gradientClasses ="bg-[#b6b9be] p-[2px] rounded-full"
-    // "bg-gradient-to-b from-[#ED323733] to-[#1A73E933] p-[2px] rounded-full";
+  const gradientClasses = "bg-[#b6b9be] p-[2px] rounded-full";
+  // "bg-gradient-to-b from-[#ED323733] to-[#1A73E933] p-[2px] rounded-full";
 
   const innerClasses = (selected: boolean) =>
     `px-4 py-2 rounded-full text-sm font-medium w-full h-full transition 
-     ${
-       selected
-         ? "bg-[#0F172A] text-white"
-         : "bg-white text-black"
-     }`;
+     ${selected ? "bg-[#0F172A] text-white" : "bg-white text-black"}`;
 
   const isNextEnabled = Boolean(
-    q1 &&
-      q2 &&
-      (q2 === "Individual/Sole Proprietorship" ? q3 : true)
+    q1 && q2 && (q2 === "Individual/Sole Proprietorship" ? q3 : true)
   );
 
   return (
     <div className="px-8 py-6 max-w-5xl">
       {/* Step Heading */}
-      <p className="font-bold text-[20px] text-[#002169] uppercase">STEP 1 of 5</p>
+      <p className="font-bold text-[20px] text-[#002169] uppercase">
+        STEP 2 of 5
+      </p>
 
       {/* Title Section */}
       <div className="mt-4">
@@ -136,6 +139,31 @@ const About = () => {
       {/* Next Button */}
       <div className="mt-10">
         <button
+          type="button"
+          onClick={() => router.push("/onboarding/contactVerification")}
+          className="px-8 py-2 rounded-full font-medium border border-gray-400 text-gray-600 hover:bg-gray-100 mr-4"
+        >
+          Back
+        </button>
+
+        <button
+          type="button"
+          onClick={async () => {
+            if (!isNextEnabled) return;
+            setSubmitError(null);
+            const fd = new FormData();
+            fd.set("partner_identity", q1 ?? "");
+            fd.set("buisness_type", q2 ?? "");
+            if (q2 !== "Company") {
+              fd.set("buisness_category", q3 ?? "");
+            }
+            try {
+              await onSubmit(fd);
+              router.push("/onboarding/kyc");
+            } catch (e) {
+              setSubmitError("Request failed");
+            }
+          }}
           className={`px-8 py-2 rounded-full font-medium transition ${
             isNextEnabled
               ? "bg-blue-600 text-white hover:bg-blue-700"
@@ -145,6 +173,9 @@ const About = () => {
         >
           Next
         </button>
+        {submitError && (
+          <p className="text-red-600 text-sm mt-3">{submitError}</p>
+        )}
       </div>
     </div>
   );

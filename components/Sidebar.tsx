@@ -6,16 +6,16 @@ import { usePathname } from "next/navigation";
 
 const steps = [
   {
-    route: "/onboarding/about",
-    icon: "/images/AboutCard.png",
-    title: "About You",
-    desc: "Tell us about your registration type and business structure",
-  },
-  {
     route: "/onboarding/contactVerification",
     icon: "/images/ContactLogo.png",
     title: "Contact Verification",
     desc: "Verify your contact details via OTP for secure access",
+  },
+  {
+    route: "/onboarding/about",
+    icon: "/images/AboutCard.png",
+    title: "About You",
+    desc: "Tell us about your registration type and business structure",
   },
   {
     route: "/onboarding/kyc",

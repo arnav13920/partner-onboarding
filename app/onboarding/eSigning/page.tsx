@@ -13,7 +13,7 @@ export default function Page() {
         <Sidebar />
         <Esign />
       </div>
-      {open && <OnboardingModal onClose={() => setOpen(false)} />}
+      {open && <AbhiLoansModal onClose={() => setOpen(false)} />}
     </>
   );
 }

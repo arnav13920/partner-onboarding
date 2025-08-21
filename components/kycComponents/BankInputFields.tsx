@@ -2,7 +2,17 @@
 
 import React, { useState } from "react";
 
-const BankInputFields = () => {
+type BankInputFieldsProps = {
+  verifyBankAction: (formData: FormData) => Promise<any>;
+  isVerified?: boolean;
+  onVerified?: () => void;
+};
+
+const BankInputFields: React.FC<BankInputFieldsProps> = ({
+  verifyBankAction,
+  isVerified,
+  onVerified,
+}) => {
   const [accountNumber, setAccountNumber] = useState("");
   const [ifsc, setIfsc] = useState("");
 
@@ -56,17 +66,29 @@ const BankInputFields = () => {
       </div>
       {/* Verify Button */}
       <div className="justify-end flex">
-        <button
-          type="button"
-          disabled={!isValid}
-          className={`mt-6 w-[140px] h-[42px] rounded-full text-sm font-medium transition-colors ${
-            isValid
-              ? "bg-blue-600 text-white hover:bg-blue-700"
-              : "bg-gray-300 text-gray-500 cursor-not-allowed"
-          }`}
+        <form
+          action={async (fd: FormData) => {
+            if (!isValid) return;
+            fd.set("account_number", accountNumber.replace(/\D/g, ""));
+            fd.set("ifsc_code", ifsc);
+            await verifyBankAction(fd);
+            onVerified?.();
+          }}
         >
-          Verify
-        </button>
+          <button
+            type="submit"
+            disabled={!isValid || isVerified}
+            className={`mt-6 w-[140px] h-[42px] rounded-full text-sm font-medium transition-colors ${
+              isVerified
+                ? "bg-green-600 text-white"
+                : isValid
+                ? "bg-blue-600 text-white hover:bg-blue-700"
+                : "bg-gray-300 text-gray-500 cursor-not-allowed"
+            }`}
+          >
+            {isVerified ? "Verified" : "Verify"}
+          </button>
+        </form>
       </div>
     </>
   );

@@ -1,11 +1,18 @@
 import React from "react";
 import Image from "next/image";
 
-const RightSide = () => {
+type RightSideProps = {
+  onGetStarted: () => void;
+};
+
+const RightSide: React.FC<RightSideProps> = ({ onGetStarted }) => {
   const documents = [
     { icon: "/images/Gst.png", label: "GST No./ Declaration" },
     { icon: "/images/PAnLogo.png", label: "PAN Card" },
-    { icon: "/images/Registration.png", label: "ARN / SRN / IRDA Registration No." },
+    {
+      icon: "/images/Registration.png",
+      label: "ARN / SRN / IRDA Registration No.",
+    },
     { icon: "/images/BankLogo.png", label: "Bank Account Details" },
   ];
 
@@ -13,8 +20,14 @@ const RightSide = () => {
     <div className="flex flex-col justify-center items-center px-6 py-8">
       {/* Title Section */}
       <h2 className="font-bold text-[40px] text-center text-[#002169] mb-2">
-        Become an <span className="bg-gradient-to-l from-[#1A73E9] to-[#ED3237] 
-             bg-clip-text text-transparent hover:underline">Abhi Loans</span> partner
+        Become an{" "}
+        <span
+          className="bg-gradient-to-l from-[#1A73E9] to-[#ED3237] 
+             bg-clip-text text-transparent hover:underline"
+        >
+          Abhi Loans
+        </span>{" "}
+        partner
       </h2>
       <h4 className="font-bold text-[24px] text-center text-[#8090B4] mb-8">
         Supercharge your income
@@ -40,7 +53,10 @@ const RightSide = () => {
       </div>
 
       {/* Button */}
-      <button className="font-bold text-[15px] cursor-pointer text-white bg-[#002169] rounded-[50px] w-[300px] h-[64px] hover:bg-[#00164d] transition-colors">
+      <button
+        onClick={onGetStarted}
+        className="font-bold text-[15px] cursor-pointer text-white bg-[#002169] rounded-[50px] w-[300px] h-[64px] hover:bg-[#00164d] transition-colors"
+      >
         Get Started
       </button>
     </div>

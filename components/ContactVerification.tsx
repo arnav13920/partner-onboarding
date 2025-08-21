@@ -3,8 +3,17 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import VerifyOtpModal from "./VerifyOtpModal"; // ✅ Import the modal
+import { useRouter } from "next/navigation";
 
-const ContactVerification = () => {
+type ContactVerificationProps = {
+  sendOtpAction: (formData: FormData) => Promise<any>;
+  verifyOtpAction: (formData: FormData) => Promise<any>;
+};
+
+const ContactVerification: React.FC<ContactVerificationProps> = ({
+  sendOtpAction,
+  verifyOtpAction,
+}) => {
   const [mobile, setMobile] = useState("");
   const [email, setEmail] = useState("");
   const [errors, setErrors] = useState<{ mobile?: string; email?: string }>({});
@@ -12,6 +21,9 @@ const ContactVerification = () => {
   // ✅ State for OTP Modal
   const [showOtpModal, setShowOtpModal] = useState(false);
   const [otpType, setOtpType] = useState<"mobile" | "email" | null>(null);
+  const [isMobileVerified, setIsMobileVerified] = useState(false);
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const router = useRouter();
 
   const validateMobile = (value: string) => {
     const regex = /^[6-9]\d{9}$/; // Indian mobile numbers
@@ -44,14 +56,13 @@ const ContactVerification = () => {
   };
 
   // ✅ Enable Next only if both fields are valid
-  const isNextEnabled =
-    validateMobile(mobile) && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const isNextEnabled = isMobileVerified && isEmailVerified;
 
   return (
     <div className="px-14 py-6 max-w-5xl">
       {/* Step Heading */}
       <p className="font-bold text-[20px] text-[#002169] uppercase">
-        STEP 2 of 5
+        STEP 1 of 5
       </p>
 
       {/* Title Section */}
@@ -112,23 +123,38 @@ const ContactVerification = () => {
               />
             </div>
             {/* ✅ Mobile Verify Button outside border */}
-            <button
-              type="button"
-              onClick={() => {
-                if (validateMobile(mobile)) {
+            {isMobileVerified ? (
+              <button
+                type="button"
+                disabled
+                className="text-sm font-medium text-[#1EA860] cursor-default"
+              >
+                Verified
+              </button>
+            ) : (
+              <form
+                action={async (fd: FormData) => {
+                  if (!validateMobile(mobile)) return;
+                  fd.set("type", "mobile");
+                  fd.set("mobileNumber", mobile);
+                  await sendOtpAction(fd);
                   setOtpType("mobile");
                   setShowOtpModal(true);
-                }
-              }}
-              disabled={!validateMobile(mobile)}
-              className={`text-sm font-medium transition-colors  cursor-pointer duration-300 ${
-                validateMobile(mobile)
-                  ? "text-[#1EA860] hover:opacity-90"
-                  : "text-[#B7B9BF] cursor-not-allowed"
-              }`}
-            >
-              Verify
-            </button>
+                }}
+              >
+                <button
+                  type="submit"
+                  disabled={!validateMobile(mobile)}
+                  className={`text-sm font-medium transition-colors  cursor-pointer duration-300 ${
+                    validateMobile(mobile)
+                      ? "text-[#1EA860] hover:opacity-90"
+                      : "text-[#B7B9BF] cursor-not-allowed"
+                  }`}
+                >
+                  Verify
+                </button>
+              </form>
+            )}
           </div>
           {errors.mobile && (
             <p className="text-red-500 text-sm mt-1">{errors.mobile}</p>
@@ -157,23 +183,39 @@ const ContactVerification = () => {
               />
             </div>
             {/* ✅ Email Verify Button outside border */}
-            <button
-              type="button"
-              onClick={() => {
-                if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            {isEmailVerified ? (
+              <button
+                type="button"
+                disabled
+                className="text-sm font-medium text-[#1EA860] cursor-default"
+              >
+                Verified
+              </button>
+            ) : (
+              <form
+                action={async (fd: FormData) => {
+                  const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+                  if (!ok) return;
+                  fd.set("type", "email");
+                  fd.set("email", email);
+                  await sendOtpAction(fd);
                   setOtpType("email");
                   setShowOtpModal(true);
-                }
-              }}
-              disabled={!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)}
-              className={`text-sm font-medium transition-colors cursor-pointer duration-300 ${
-                /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
-                  ? "text-[#1EA860] hover:opacity-90"
-                  : "text-[#B7B9BF] cursor-not-allowed"
-              }`}
-            >
-              Verify
-            </button>
+                }}
+              >
+                <button
+                  type="submit"
+                  disabled={!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)}
+                  className={`text-sm font-medium transition-colors cursor-pointer duration-300 ${
+                    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+                      ? "text-[#1EA860] hover:opacity-90"
+                      : "text-[#B7B9BF] cursor-not-allowed"
+                  }`}
+                >
+                  Verify
+                </button>
+              </form>
+            )}
           </div>
           {errors.email && (
             <p className="text-red-500 text-sm mt-1">{errors.email}</p>
@@ -183,9 +225,9 @@ const ContactVerification = () => {
 
       {/* Back & Next Buttons */}
       <div className="mt-60 flex  w-[900px]">
-        <button className="px-8 py-2 rounded-full font-medium border border-gray-400 text-gray-600 hover:bg-gray-100 mr-4">
+        {/* <button className="px-8 py-2 rounded-full font-medium border border-gray-400 text-gray-600 hover:bg-gray-100 mr-4">
           Back
-        </button>
+        </button> */}
 
         <button
           className={`px-8 py-2 rounded-full font-medium transition ${
@@ -194,6 +236,9 @@ const ContactVerification = () => {
               : "bg-gray-300 text-white cursor-not-allowed"
           }`}
           disabled={!isNextEnabled}
+          onClick={() => {
+            if (isNextEnabled) router.push("/onboarding/about");
+          }}
         >
           Next
         </button>
@@ -205,6 +250,17 @@ const ContactVerification = () => {
           onClose={() => setShowOtpModal(false)}
           contactInfo={otpType === "mobile" ? `+91 ${mobile}` : email}
           type={otpType}
+          verifyOtpAction={async (fd: FormData) => {
+            fd.set("type", otpType);
+            if (otpType === "mobile") fd.set("mobileNumber", mobile);
+            if (otpType === "email") fd.set("email", email);
+            await verifyOtpAction(fd);
+            setShowOtpModal(false);
+          }}
+          onVerified={() => {
+            if (otpType === "mobile") setIsMobileVerified(true);
+            if (otpType === "email") setIsEmailVerified(true);
+          }}
         />
       )}
     </div>
