@@ -50,9 +50,23 @@ export const verifySrnResponseSchema = z.object({
     .optional(),
 });
 
+export const uploadPdfResponseSchema = z.object({
+  success: z.boolean(),
+  message: z.string(),
+  data: z.object({
+    filename: z.string(),
+    originalName: z.string(),
+    size: z.number(),
+    mimetype: z.string(),
+    path: z.string(),
+    storageType: z.string(),
+  }),
+});
+
 export type VerifyPanResponse = z.infer<typeof verifyPanResponseSchema>;
 export type VerifyBankResponse = z.infer<typeof verifyBankResponseSchema>;
 export type VerifyGstResponse = z.infer<typeof verifyGstResponseSchema>;
 export type VerifySrnResponse = z.infer<typeof verifySrnResponseSchema>;
+export type UploadPdfResponse = z.infer<typeof uploadPdfResponseSchema>;
 
 

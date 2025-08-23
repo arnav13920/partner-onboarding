@@ -5,22 +5,62 @@ import Image from "next/image";
 
 type GstInputFieldsProps = {
   verifyGstAction: (formData: FormData) => Promise<any>;
+  uploadPdfAction: (formData: FormData) => Promise<any>;
   isVerified?: boolean;
   onVerified?: () => void;
 };
 
+type UploadState = "idle" | "uploading" | "success" | "error";
+
 const GstInputFields: React.FC<GstInputFieldsProps> = ({
   verifyGstAction,
+  uploadPdfAction,
   isVerified,
   onVerified,
 }) => {
   const [hasGst, setHasGst] = useState<boolean | null>(null);
   const [gstin, setGstin] = useState("");
+  const [uploadState, setUploadState] = useState<UploadState>("idle");
+  const [uploadedFile, setUploadedFile] = useState<{
+    originalName: string;
+    filename: string;
+  } | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const normalizedGstin = gstin.toUpperCase().replace(/[^A-Z0-9]/g, "");
   const isValidGstin = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z][1-9A-Z]Z[0-9A-Z]$/.test(
     normalizedGstin
   );
+
+  const handleFileUpload = async (file: File) => {
+    if (!file) return;
+
+    setUploadState("uploading");
+    setErrorMessage("");
+
+    try {
+      const formData = new FormData();
+      formData.append("pdf", file);
+
+      const result = await uploadPdfAction(formData);
+      setUploadedFile({
+        originalName: result.data.originalName,
+        filename: result.data.filename,
+      });
+      setUploadState("success");
+    } catch (error) {
+      console.error("Upload error:", error);
+      setErrorMessage(error instanceof Error ? error.message : "Upload failed");
+      setUploadState("error");
+    }
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      handleFileUpload(file);
+    }
+  };
 
   return (
     <>
@@ -105,27 +145,69 @@ const GstInputFields: React.FC<GstInputFieldsProps> = ({
         </>
       )}
       {hasGst === false && (
-        <div className=" p-2 rounded-2xl gap-3 flex border-1 border-[B7B9BF] w-[450px] justify-center items-center">
-          <p className="text-center pl-3">
-            Upload GST Declaration Certificate{" "}
-          </p>
-          <input
-            id="gstDeclaration"
-            type="file"
-            accept="application/pdf,.pdf"
-            className="hidden"
-          />
-          <label
-            htmlFor="gstDeclaration"
-            className="flex justify-center items-center cursor-pointer"
-          >
-            <Image
-              src="/images/FileUploadIcon.png"
-              alt="uploadFile"
-              width={28}
-              height={28}
+        <div className="flex flex-col gap-4">
+          <div className="p-2 rounded-2xl gap-3 flex border-1 border-[B7B9BF] w-[450px] justify-center items-center">
+            <p className="text-center pl-3">
+              Upload GST Declaration Certificate{" "}
+            </p>
+            <input
+              id="gstDeclaration"
+              type="file"
+              accept="application/pdf,.pdf"
+              className="hidden"
+              onChange={handleFileChange}
+              disabled={
+                uploadState === "uploading" || uploadState === "success"
+              }
             />
-          </label>
+            <label
+              htmlFor="gstDeclaration"
+              className={`flex justify-center items-center cursor-pointer ${
+                uploadState === "uploading" || uploadState === "success"
+                  ? "opacity-50 cursor-not-allowed"
+                  : ""
+              }`}
+            >
+              <Image
+                src="/images/FileUploadIcon.png"
+                alt="uploadFile"
+                width={28}
+                height={28}
+              />
+            </label>
+          </div>
+
+          {/* Upload State Display */}
+          {uploadState === "uploading" && (
+            <div className="flex items-center gap-2 text-blue-600">
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+              <span className="text-sm">Uploading...</span>
+            </div>
+          )}
+
+          {uploadState === "success" && uploadedFile && (
+            <div className="flex items-center gap-2 text-green-600 bg-green-50 p-3 rounded-lg">
+              <Image
+                src="/images/greenCheckIcon.png"
+                alt="success"
+                width={16}
+                height={16}
+              />
+              <span className="text-sm font-medium">
+                Uploaded successfully!
+              </span>
+              <span className="text-sm text-gray-600">
+                ({uploadedFile.originalName})
+              </span>
+            </div>
+          )}
+
+          {uploadState === "error" && (
+            <div className="flex items-center gap-2 text-red-600 bg-red-50 p-3 rounded-lg">
+              <span className="text-sm font-medium">Upload failed:</span>
+              <span className="text-sm">{errorMessage}</span>
+            </div>
+          )}
         </div>
       )}
     </>

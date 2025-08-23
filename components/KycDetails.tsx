@@ -13,6 +13,7 @@ type KycDetailsProps = {
   verifyBankAction: (formData: FormData) => Promise<any>;
   verifyGstAction: (formData: FormData) => Promise<any>;
   verifySrnAction: (formData: FormData) => Promise<any>;
+  uploadPdfAction: (formData: FormData) => Promise<any>;
 };
 
 const KycDetails: React.FC<KycDetailsProps> = ({
@@ -20,6 +21,7 @@ const KycDetails: React.FC<KycDetailsProps> = ({
   verifyBankAction,
   verifyGstAction,
   verifySrnAction,
+  uploadPdfAction,
 }) => {
   const [isPanOpen, setIsPanOpen] = useState(true);
   const [isBankOpen, setIsBankOpen] = useState(false);
@@ -184,6 +186,7 @@ const KycDetails: React.FC<KycDetailsProps> = ({
             <div id="gst-accordion-panel" className="mt-2">
               <GstInputFields
                 verifyGstAction={verifyGstAction}
+                uploadPdfAction={uploadPdfAction}
                 isVerified={isGstVerified}
                 onVerified={() => {
                   setIsGstVerified(true);

@@ -8,7 +8,7 @@ export type KeyPersonItem = {
   firstName: string
   lastName: string
   mobileNumber: string
-  email: string
+  email: string                                                            
 }
 
 export async function addKeyPersonDetails(items: KeyPersonItem[]): Promise<AddKeyPersonResponse> {

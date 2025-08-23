@@ -5,10 +5,12 @@ import {
   verifyBankResponseSchema,
   verifyGstResponseSchema,
   verifySrnResponseSchema,
+  uploadPdfResponseSchema,
   type VerifyPanResponse,
   type VerifyBankResponse,
   type VerifyGstResponse,
   type VerifySrnResponse,
+  type UploadPdfResponse,
 } from './schema'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000'
@@ -95,6 +97,30 @@ export async function verifySrn(srn_number: string): Promise<VerifySrnResponse> 
 export async function verifySrnAction(formData: FormData) {
   const srn_number = String(formData.get('srn_number') || '')
   return verifySrn(srn_number)
+}
+
+export async function uploadPdf(file: File): Promise<UploadPdfResponse> {
+  const formData = new FormData()
+  formData.append('pdf', file)
+  
+  const res = await fetch(`${API_BASE_URL}/kyc/uploadPdf`, {
+    method: 'POST',
+    body: formData,
+    cache: 'no-store',
+  })
+  
+  if (!res.ok) throw new Error(`uploadPdf failed with status ${res.status}`)
+  const data = await res.json().catch(() => ({}))
+  console.log(data, "data from upload pdf")
+  const parsed = uploadPdfResponseSchema.safeParse(data)
+  if (!parsed.success) throw new Error('Invalid response format from uploadPdf')
+  return parsed.data
+}
+
+export async function uploadPdfAction(formData: FormData) {
+  const file = formData.get('pdf') as File
+  if (!file) throw new Error('No file provided')
+  return uploadPdf(file)
 }
 
 

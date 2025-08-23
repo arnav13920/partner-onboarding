@@ -4,6 +4,7 @@ import {
   verifyBankAction,
   verifyGstAction,
   verifySrnAction,
+  uploadPdfAction,
 } from "./action";
 import Sidebar from "@/components/Sidebar";
 import React from "react";
@@ -17,6 +18,7 @@ const page = () => {
         verifyBankAction={verifyBankAction}
         verifyGstAction={verifyGstAction}
         verifySrnAction={verifySrnAction}
+        uploadPdfAction={uploadPdfAction}
       />
     </div>
   );
