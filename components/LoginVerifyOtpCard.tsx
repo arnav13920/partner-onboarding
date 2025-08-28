@@ -99,7 +99,7 @@ const LoginVerifyOtpCard: React.FC<LoginVerifyOtpCardProps> = ({
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between">
-        <p className="font-bold text-[22px] text-[#002169]">Verify OTP</p>
+        <p className="font-bold text-[22px] text-[#000000]">Verify OTP</p>
         <button
           onClick={handleClose}
           className="text-sm text-gray-500 hover:text-gray-700"
@@ -128,8 +128,9 @@ const LoginVerifyOtpCard: React.FC<LoginVerifyOtpCardProps> = ({
                 onChange={(e) => handleChange(e.target.value, index)}
                 onKeyDown={(e) => handleKeyDown(e, index)}
                 onPaste={(e) => handlePaste(e, index)}
+                disabled={isOtpVerified}
                 className="w-[50px] h-[60px] rounded-2xl text-center text-lg 
-                   bg-white outline-none focus:bg-gray-50"
+                   bg-white outline-none focus:bg-gray-50 disabled:bg-gray-100 disabled:text-gray-400"
               />
             </div>
           ))}
