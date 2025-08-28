@@ -10,7 +10,7 @@ import { z } from "zod";
  */
 export const EsignRequestSchema = z.object({
   userId: z.number().int().positive(),
-  userType: z.enum(["PARTNER", "ADMIN", "CUSTOMER"]).default("PARTNER"), // extend if more roles
+  userType: z.enum(["PARTNER","TEMP"]), // extend if more roles
 });
 
 export type EsignRequest = z.infer<typeof EsignRequestSchema>;

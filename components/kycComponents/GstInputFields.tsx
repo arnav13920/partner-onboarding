@@ -4,8 +4,12 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 
 type GstInputFieldsProps = {
-  verifyGstAction: (formData: FormData) => Promise<import("../../app/onboarding/kyc/schema").VerifyGstResponse>;
-  uploadPdfAction: (formData: FormData) => Promise<import("../../app/onboarding/kyc/schema").UploadPdfResponse>;
+  verifyGstAction: (
+    formData: FormData
+  ) => Promise<import("../../app/onboarding/kyc/schema").VerifyGstResponse>;
+  uploadPdfAction: (
+    formData: FormData
+  ) => Promise<import("../../app/onboarding/kyc/schema").UploadPdfResponse>;
   isVerified?: boolean;
   onVerified?: () => void;
 };
@@ -48,9 +52,9 @@ const GstInputFields: React.FC<GstInputFieldsProps> = ({
   }, [isVerified, onVerified]);
 
   const normalizedGstin = gstin.toUpperCase().replace(/[^A-Z0-9]/g, "");
-  const isValidGstin = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z][1-9A-Z]Z[0-9A-Z]$/.test(normalizedGstin);
-  // Validation temporarily disabled
-  // const isValidGstin: boolean = true;
+  const isValidGstin = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z][1-9A-Z]Z[0-9A-Z]$/.test(
+    normalizedGstin
+  );
 
   const handleFileUpload = async (file: File) => {
     if (!file) return;
@@ -135,6 +139,7 @@ const GstInputFields: React.FC<GstInputFieldsProps> = ({
           </div>
         </div>
       </div>
+
       {hasGst && (
         <>
           <div className="flex flex-col w-full max-w-[450px]">
@@ -148,25 +153,45 @@ const GstInputFields: React.FC<GstInputFieldsProps> = ({
                 onChange={(e) => setGstin(e.target.value.toUpperCase())}
                 maxLength={15}
                 disabled={isDisabled}
-                className="peer h-[45px] w-full rounded-2xl border border-gray-300 px-4  text-base text-gray-800 placeholder-gray-400 focus:placeholder-transparent focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none disabled:bg-gray-100 disabled:cursor-not-allowed"
+                className={`peer h-[45px] w-full rounded-2xl border px-4 text-base text-gray-800 placeholder-gray-400 
+                  focus:placeholder-transparent focus:border-blue-500 focus:ring-2 focus:ring-blue-100 
+                  outline-none disabled:bg-gray-100 disabled:cursor-not-allowed
+                  ${
+                    normalizedGstin.length > 0 && !isValidGstin
+                      ? "border-red-500"
+                      : "border-gray-300"
+                  }`}
               />
               <label
                 htmlFor="gstNumber"
-                className={`pointer-events-none absolute -top-3 left-5 bg-white px-1 text-sm text-[#575D6A] transition-opacity ${
-                  normalizedGstin.length > 0
-                    ? "opacity-100"
-                    : "peer-focus:opacity-100 opacity-0"
-                }`}
+                className={`pointer-events-none absolute -top-3 left-5 bg-white px-1 text-sm text-[#575D6A] transition-opacity 
+                  ${
+                    normalizedGstin.length > 0
+                      ? "opacity-100"
+                      : "peer-focus:opacity-100 opacity-0"
+                  }`}
               >
                 GST Number <span className="text-red-500">*</span>
               </label>
             </div>
+
+            {/* Error message if GSTIN invalid */}
+            {normalizedGstin.length > 0 && !isValidGstin && (
+              <p className="text-red-500 text-sm mt-2">
+                Please enter a valid GST number.
+              </p>
+            )}
           </div>
+
           {/* Verify Button */}
           <div className="justify-end flex">
             <form
               action={async (fd: FormData) => {
                 if (isDisabled) return;
+                if (!isValidGstin) {
+                  setErrorMessage("Please enter a valid GST number");
+                  return;
+                }
                 setIsSubmitting(true);
                 try {
                   const userIdStr = localStorage.getItem("userId");
@@ -190,10 +215,12 @@ const GstInputFields: React.FC<GstInputFieldsProps> = ({
             >
               <button
                 type="submit"
-                disabled={isDisabled || isSubmitting}
+                disabled={isDisabled || isSubmitting || !isValidGstin}
                 className={`mt-6 w-[140px] h-[42px] rounded-full text-sm font-medium transition-colors ${
                   isDisabled
                     ? "bg-green-600 text-white"
+                    : !isValidGstin
+                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                     : !isSubmitting
                     ? "bg-blue-600 text-white hover:bg-blue-700"
                     : "bg-gray-300 text-gray-500 cursor-not-allowed"
@@ -209,9 +236,10 @@ const GstInputFields: React.FC<GstInputFieldsProps> = ({
           </div>
         </>
       )}
+
       {hasGst === false && (
         <div className="flex flex-col gap-4">
-          <div className="p-2 rounded-2xl gap-3 flex border-1 border-[B7B9BF] w-[450px] justify-center items-center">
+          <div className="p-2 rounded-2xl gap-3 flex border border-[#B7B9BF] w-[450px] justify-center items-center">
             <p className="text-center pl-3">
               Upload GST Declaration Certificate{" "}
             </p>

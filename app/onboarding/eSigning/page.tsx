@@ -1,11 +1,12 @@
 "use client";
-import { useEffect, useState } from "react";
+
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Sidebar from "@/components/Sidebar";
 import Esign from "@/components/Esign";
 import OnboardingModal from "@/components/OnboardingModal";
 
-export default function Page() {
+function EsignPageContent() {
   const [open, setOpen] = useState(false);
   const searchParams = useSearchParams();
 
@@ -24,5 +25,13 @@ export default function Page() {
       </div>
       {open && <OnboardingModal onClose={() => setOpen(false)} />}
     </>
+  );
+}
+
+export default function Page() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <EsignPageContent />
+    </Suspense>
   );
 }

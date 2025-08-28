@@ -21,13 +21,27 @@ const Esign = () => {
 
   const handleEsignClick = async () => {
     try {
-      const res = await getEsignUrl(1, "PARTNER");
+      const userIdStr = localStorage.getItem("userId");
+      const userType = localStorage.getItem("userType");
+      if (!userIdStr || !userType) {
+        alert("User information not found. Please login again.");
+        return;
+      }
+      const userId = Number(userIdStr);
+      if (isNaN(userId) || !userType) {
+        alert("Invalid user information. Please login again.");
+        return;
+      }
+      const res = await getEsignUrl(userId, userType);
       if (res.success && res.data.esignUrl) {
         // open the esign URL in a new tab
         window.open(res.data.esignUrl, "_blank", "noopener,noreferrer");
+      } else {
+        alert("Failed to get eSign URL. Please try again.");
       }
     } catch (err) {
       console.error("Failed to get esign url:", err);
+      alert("Failed to get eSign URL. Please try again.");
     }
   };
 
